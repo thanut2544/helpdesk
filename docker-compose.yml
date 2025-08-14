@@ -1,0 +1,34 @@
+services:
+  backend:
+    build: ./helpdesk-frontend
+    container_name: helpdesk-backend
+    ports:
+      - "3001:3001"
+    # ถ้าใช้ .env ให้สร้างไฟล์ backend/.env
+    env_file:
+      - ./helpdesk-backend/.env
+    depends_on:
+      - db
+
+  frontend:
+    build: ./helpdesk-frontend
+    container_name: helpdesk-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  db:
+    image: mysql:8
+    container_name: helpdesk-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: mydb
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
